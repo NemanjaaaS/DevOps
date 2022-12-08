@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        
+        stage('Parallel Stage'){
+            failFast true
+            parallel{
+            stage('First Job'){
+                steps{
+                build 'ParallelJobs'
+                }
+        }
+            stage('Second Job'){
+                steps{
+                build 'SecondParallelJob'
+                }
+            }
+        }
+    
+        
+    }
+}
+}
