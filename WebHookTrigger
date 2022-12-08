@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Call MavenProject') {
+            steps {
+                script{
+                    if("${action}" == "closed"){
+                        build 'MavenJob'
+                    }
+                    else{
+                        echo "pull request is opened"
+                    }
+                }
+                
+
+            }
+        }
+
+    }
+}
