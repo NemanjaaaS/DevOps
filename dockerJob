@@ -1,0 +1,47 @@
+pipeline {
+environment {
+registry = "nemanjaaas/createfromjenkins"
+registryCredential = 'dockerhub_id'
+dockerImage = ''
+}
+agent any
+tools{
+    dockerTool 'docker'
+}
+
+stages {
+stage('Cloning our Git') {
+steps {
+    script{
+        checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/NemanjaaaS/Dockerfile.git']]])
+    }
+
+            }   
+        }
+        stage('Build image'){
+            steps{
+                sh '''
+                docker build -t nemanjaaas/createfromjenkins:$BUILD_NUMBER .
+                
+                '''
+            }
+            
+        }
+                stage('Login'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'id_dockerhub', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    sh '''
+                    docker login -u="${username}" -p="${password}"
+                '''
+}
+
+            }
+            
+        }
+        stage('Push'){
+            steps{
+                sh 'docker push nemanjaaas/createfromjenkins:$BUILD_NUMBER'
+            }
+        }
+    }
+}
