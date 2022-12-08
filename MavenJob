@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    tools{
+        maven "maven"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script{
+                   checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/NemanjaaaS/BalloonMaven']]])
+                }
+            }
+        }
+        stage('Maven command') {
+            steps {
+                sh 'cd ./BalloonMaven && mvn clean install'
+            }
+        }
+            stage('Call build image') {
+            steps {
+                build 'dockerJob'
+            }
+        }
+    }
+}
