@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    parameters {
+    string defaultValue: 'banana', name: 'voce'
+    string defaultValue: 'paradajz', name: 'povrce'
+    string defaultValue: 'coca-cola', name: 'sok'
+    }
+
+
+
+   stages {
+        stage("Parameters") {
+            steps {
+                echo "Nemanja jede ${params.voce} dok sipa ${params.sok}-u i sece ${params.povrce}"
+            }
+        }
+    }
+}
